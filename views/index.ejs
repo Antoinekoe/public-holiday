@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+  <title>Public Holidays in the world</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="header-container">
+        <h1>Public holidays in the world</h1>
+        <p>Discover the public holidays in different countries of the world.</p>
+      </div>
+    </header>
+    <div class="form">
+      <form action="/public-holiday" method="GET">
+        <label for="title-country">Country</label>
+        <select name="country" id="country" required>
+          <% for (let i=0; i < dataGet.data.length ; i++ ) { %>
+          <option value="<%= dataGet.data[i].countryCode%>"><%= dataGet.data[i].name %></option>
+          <% } %>
+        </select>
+        <label for="title-year">Year</label>
+        <select name="year" id="year" required>
+          <% for (let i=0; i < yearGet.length ; i++ ) { %>
+          <option value="<%= yearGet[i]%>"><%= yearGet[i] %></option>
+          <% } %>
+        </select>
+        <input type="submit" value="submit" />
+      </form>
+    </div>
+    <div class="card-container">
+      <div class="card">
+        <% if (locals.resultRequest) { %>
+        <% for (let i=0; i < resultRequest.length ; i++ ) { %>
+        <h3><%= resultRequest[i].name %></h3>
+        <span><i class='bx  bx-calendar-detail'></i><%= resultRequest[i].formattedDate; %></span>
+        <% } } %>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
