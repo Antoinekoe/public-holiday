@@ -10,9 +10,16 @@ const actualYear = new Date().getFullYear();
 let yearSupported = [];
 const lastYearSupported = 1975;
 
+app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Setting supported years
+
 for (let year = actualYear; year >= lastYearSupported; year--) {
   yearSupported.push(year);
 }
+
+// Creating the function that formats the date from Nager API to normal format
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -20,10 +27,8 @@ function formatDate(dateString) {
   return date.toLocaleDateString("en-US", options);
 }
 
-app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: true }));
+// On the load of the page, get Nager API available countries and give all the years supported
 
-// On the load of the page, get Nager API available countries
 app.get("/", async (req, res) => {
   try {
     const response = await axios.get(
@@ -37,6 +42,8 @@ app.get("/", async (req, res) => {
     });
   }
 });
+
+// When the user choose a year and a country, get the Public Holidays and send it to index.ejs - format the date received and send it to index.ejs
 
 app.get("/public-holiday", async (req, res) => {
   try {
@@ -65,5 +72,7 @@ app.get("/public-holiday", async (req, res) => {
     });
   }
 });
+
+// App listening on port defined
 
 app.listen(port, () => {});
