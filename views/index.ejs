@@ -2,56 +2,81 @@
 <html lang="en">
 
 <head>
+  <!-- Meta tags and page setup -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="/style/styles.css">
+
+  <!-- External resources: icons and fonts -->
   <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Play:wght@400;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Press+Start+2P&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
   <title>Public Holidays in the world</title>
 </head>
 
 <body>
   <div class="container">
+    <!-- Header section with title and description -->
     <div class="header-container">
       <h1>Public holidays in the world</h1>
       <p>Discover the public holidays in different countries of the world.</p>
     </div>
+
+    <!-- Search form: allows users to select country and year -->
     <form action="/public-holiday" method="GET">
+      <!-- Country dropdown selection -->
       <div class="country">
         <label for="title-country">Country</label>
         <select name="country" id="country" required>
           <% for (let i=0; i < dataGet.data.length ; i++ ) { %>
-          <option value="<%= dataGet.data[i].countryCode%>"><%= dataGet.data[i].name %></option>
+          <option value="<%= dataGet.data[i].countryCode%>" <% if (locals.countryCode && countryCode === dataGet.data[i].countryCode) { %> selected <% } %>><%= dataGet.data[i].name %></option>
           <% } %>
         </select>
       </div>
+
+      <!-- Year dropdown selection -->
       <div class="year">
         <label for="title-year">Year</label>
         <select name="year" id="year" required>
           <% for (let i=0; i < yearGet.length ; i++ ) { %>
-          <option value="<%= yearGet[i]%>"><%= yearGet[i] %></option>
+          <option value="<%= yearGet[i]%>" <% if (locals.year && year == yearGet[i]) {  %> selected <% } %>><%= yearGet[i] %></option>
           <% } %>
         </select>
       </div>
+
+      <!-- Submit button with icon -->
       <button type="submit">
         <i class='bx bx-search'></i>
         <span class="subbmit"> Submit</span>
       </button>
     </form>
+
+    <!-- Results section: displays holiday cards -->
     <div class="card-container">
-      <% if (locals.resultRequest) { %>
-      <% for (let i=0; i < resultRequest.length ; i++ ) { %>
+      <!-- Only display results if we have received data from API -->
+      <% if (locals.resultRequestFormatted) { %>
+      <% for (let i=0; i < resultRequestFormatted.length ; i++ ) { %>
+
+      <!-- Visual differentiation: 
+           - Future holidays display in standard card
+           - Past holidays display in red card -->
+      <% if (resultRequestFormatted[i].date > actualDay) { %>
       <div class="card">
-        <h3><%= resultRequest[i].name %></h3>
-        <span><i class='bx  bx-calendar-detail'></i><%= resultRequest[i].formattedDate; %></span>
+        <% } else { %>
+        <div class="card-red">
+          <% } %>
+
+          <!-- Holiday information display -->
+          <h3><%= resultRequestFormatted[i].name %></h3>
+          <span class="date"><i class='bx bx-calendar-detail'></i> <%= resultRequestFormatted[i].formattedDate; %></span>
+        </div>
+        <% } } %>
       </div>
-      <% } } %>
-
     </div>
-  </div>
-
 </body>
 
 </html>
